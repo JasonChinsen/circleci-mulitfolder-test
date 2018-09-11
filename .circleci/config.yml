@@ -1,41 +1,12 @@
 version: 2
 jobs:
-  db_test:
+  mulitpathtest:
     docker:
-      # Prim image that all the "work is done on"
-      - image: circleci/python:3.6.2-stretch-browsers
-        environment:
-          TEST_DATABSE_URL: postgresql://root@localhost/circle_test
-      - image: circleci/postgres:9.6.5-alpine-ram
-
-    steps:
-      - checkout
-      - run: sudo apt update; sudo apt install postgresql-client-9.6
-      - run: whoami
-      - run: |
-          psql \
-          -d $TEST_DATABSE_URL \
-          -c "CREATE TABLE test (name char(25));"
-      - run: |
-          psql \
-          -d $TEST_DATABSE_URL \
-          -c "INSERT INTO test (name) VALUES ('fern')"
-      - run: |
-          psql \
-          -d $TEST_DATABSE_URL \
-          -c "SELECT * from test"
-
-  hello_world:
-    docker:
-      - image: circleci/golang:1.9.7-browsers
-
-    steps:
-      - checkout
-      - run: echo "hello world"
-
-workflows:
-  version: 2
-  build_and_test: # name of your workflow
-    jobs:
-    - db_test
-    - hello_world
+    # Prim image that all the "work is done on"
+    - image: circleci/golang:latest
+  steps:
+    - checkout
+    - run: |
+        COMMIT_RANGE=$(echo $CIRCLE_COMPARE_URL | sed 's:^.*/compare/::g')
+        echo "Commit range: " $COMMIT_RANGE
+        git diff $COMMIT_RANGE --name-status
