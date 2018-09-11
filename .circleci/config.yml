@@ -1,12 +1,13 @@
 version: 2
 jobs:
-  mulitpathtest:
+  build:
     docker:
     # Prim image that all the "work is done on"
     - image: circleci/golang:latest
-  steps:
-    - checkout
-    - run: |
-        COMMIT_RANGE=$(echo $CIRCLE_COMPARE_URL | sed 's:^.*/compare/::g')
-        echo "Commit range: " $COMMIT_RANGE
-        git diff $COMMIT_RANGE --name-status
+      
+    steps:
+      - checkout
+      - run: |
+          COMMIT_RANGE=$(echo $CIRCLE_COMPARE_URL | sed 's:^.*/compare/::g')
+          echo "Commit range: " $COMMIT_RANGE
+          git diff $COMMIT_RANGE --name-status
